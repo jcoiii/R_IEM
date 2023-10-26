@@ -33,8 +33,8 @@ Qn = zeros(5,n);                % a matrix to store all the generated joint angl
 q_null = q0';                   % Initial Joint angle var
 pend = pose_stop.t;             % the goal point
 
-% Qn_1, Qn_2 is the joint angles.
-% ct_1, ct_2 is the cartesian trajectory.
+% Qn_1, Qn_2, Qn_3 is the joint coordinate.
+% ct_1, ct_2, ct_3 is the cartesian trajectory.
 [ct_1, Qn_1] = calculate_trajectory(10, Qn, q_null, pend, n, dt, pArb, 1); % For K=10, Figure 1
 [ct_2, Qn_2] = calculate_trajectory(1, Qn, q_null, pend, n, dt, pArb, 2); % For K=1, Figure 2
 [ct_3, Qn_3] = calculate_trajectory(0.03, Qn, q_null, pend, n, dt, pArb, 3); % For K=0.03, Figure 3
@@ -76,6 +76,7 @@ desired_pos = [(pose_start.t)' pend']
 pos_final_k1 = [ct_1(1,:) ct_1(end,:)]
 pos_final_k2 = [ct_2(1,:) ct_2(end,:)]
 pos_final_k3 = [ct_3(1,:) ct_3(end,:)]
+
 %  trajectory calculation function
 function [cartesian_traj,q_traj] = calculate_trajectory(K, Qn, q, pend, n, dt, pArb, fig_num)
     % Initial variables
