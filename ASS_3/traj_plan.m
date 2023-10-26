@@ -40,20 +40,20 @@ num_steps = 50;
 [q_traj, qd_traj, qdd_traj] = jtraj(q_start, q_stop, num_steps); % p114
 
 num_points = size(q_traj, 1);
-cartesian_traj = zeros(num_points, 3); % Initialize matrix to store Cartesian coords
+cartesian_traj = zeros(num_points, 3); 
 
 for k = 1:num_points
-    T = pArb.fkine(q_traj(k, :)); % Compute forward kinematics
-    cartesian_traj(k, :) = T.t(1:3); % Extract (x, y, z) position
+    T = pArb.fkine(q_traj(k, :)); 
+    cartesian_traj(k, :) = T.t(1:3); 
 end
 
 % Plot the robot arm trajectories in 3D
 figure(1);
-plot3(cartesian_traj(:, 1), cartesian_traj(:, 2), cartesian_traj(:, 3), 'r--', 'LineWidth', 1.5);
+plot3(cartesian_traj(:, 1), cartesian_traj(:, 2), cartesian_traj(:, 3), 'r--', 'LineWidth', 3);
 hold on;
 
 % Plot the robot arm movement using the robotics toolbox
-pArb.plot(q_traj, 'trail', {'k-', 'LineWidth', 1}); % trail -> visualize movement
+pArb.plot(q_traj, 'trail', {'k-', 'LineWidth', 0.1}); % trail -> visualize movement
 
 % Plot the trajectories of the joint variables
 figure(2);
@@ -62,9 +62,9 @@ for i = 1:num_joints
     subplot(num_joints, 1, i);
     plot(q_traj(:, i), 'LineWidth', 1.5);
     hold on;
-    title(['Joint ', num2str(i), ' Trajectory']);
-    xlabel('Steps');
-    ylabel('Angle (rad)');
+    title(['Joint ', num2str(i), ' Trajectory'], 'Interpreter', 'latex', 'FontSize', 18);
+    xlabel('Steps', 'Interpreter', 'latex', 'FontSize', 15);
+    ylabel('Angle (rad)', 'Interpreter', 'latex', 'FontSize', 15);
     grid on;
 end
 
@@ -74,41 +74,37 @@ end
 %%%%%% Write your code below this line. DO NOT change other parts. %%%%%%
 %%%% This is for the second sub-question
 
-% % Plan trajectories in the Cartesian space using pose_start and pose_stop
-% T = ctraj(pose_start, pose_stop, num_steps);
-% % q_traj = zeros(num_steps, pArb.n);  % Initialize a matrix to store joint trajectories
-% % Initialize matrix to store joint angles
-% q_traj = zeros(num_steps, pArb.n);
-% 
-% % Use inverse kinematics to find joint angles for each Cartesian pose
-% for i = 1:num_steps
-%     q_traj(i, :) = pArb.ikine(T(:,:,i), 'mask', [1 1 1 0 0 0]);
-% end
-% 
-% % Extract XYZ coordinates of the Cartesian path for plotting
-% X = squeeze(T(1,4,:));
-% Y = squeeze(T(2,4,:));
-% Z = squeeze(T(3,4,:));
-% 
-% % Plot the robot arm trajectories in 3D; 
-% figure(1);
-% plot3(X, Y, Z, 'b-', 'LineWidth', 2);  % Plotting with a blue solid line
-% hold on;
-% 
-% % Plot the robot arm movement using the robotics toolbox
-% pArb.plot(q_traj);
-% 
-% % Plot the trajectories of the joint variables
-% num_joints = size(q_traj, 2); % Assuming 'q_traj' is your joint trajectories matrix with size (num_steps, num_joints)
-% figure(3);
-% for i = 1:num_joints
-%     subplot(num_joints, 1, i);  % Create a subplot for each joint
-%     plot(q_traj(:, i), 'LineWidth', 1.5);  % Plot the trajectory for joint i
-%     title(['Joint ', num2str(i), ' Trajectory']);  % Title for each subplot
-%     xlabel('Steps');  % x-axis label
-%     ylabel('Angle [rad]');  % y-axis label
-%     grid on;  % Turn the grid on for better visibility of plot
-% end
+% Plan trajectories in the Cartesian space using pose_start and pose_stop
+T = ctraj(pose_start, pose_stop, num_steps);
+q_traj = zeros(num_steps, pArb.n);
+
+% IK to find joint angles for each Cartesian pose
+for i = 1:num_steps
+    q_traj(i, :) = pArb.ikine(T(:,:,i), 'mask', [1 1 1 0 0 0]);
+end
+X = squeeze(T(1,4,:));
+Y = squeeze(T(2,4,:));
+Z = squeeze(T(3,4,:));
+
+% Plot the robot arm trajectories in 3D; 
+figure(1);
+plot3(X, Y, Z, 'b', 'LineWidth', 2); 
+hold on;
+
+% Plot the robot arm movement using the robotics toolbox
+pArb.plot(q_traj);
+
+% Plot the trajectories of the joint variables
+num_joints = size(q_traj, 2); 
+figure(3);
+for i = 1:num_joints
+    subplot(num_joints, 1, i); 
+    plot(q_traj(:, i), 'LineWidth', 1.5);
+    title(['Joint ', num2str(i), ' Trajectory'], 'Interpreter', 'latex', 'FontSize', 18);
+    xlabel('Steps', 'Interpreter', 'latex', 'FontSize', 15);
+    ylabel('Angle (rad)', 'Interpreter', 'latex', 'FontSize', 15);
+    grid on;
+end
 
 
 %%%%%% Write your code above this line. DO NOT change other parts. %%%%%%
